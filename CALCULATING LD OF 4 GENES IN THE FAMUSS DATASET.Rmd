@@ -1,0 +1,112 @@
+---
+title: "Calculating LD (Famuss DS)"
+author: "KIRABO GLORIA"
+date: "2023-04-13"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+# CALCULATING LD
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#LOADING SEVERAL PACKAGES
+
+library(genetics)
+library(haplo.stats)
+library(dplyr)
+#library(LDheatmap)
+#library(snpStats)
+library(tidyverse)
+require(RColorBrewer)
+library(tidyr)
+library(magrittr)
+install.packages("LDheatmap") # install the package
+#library(LDheatmap)
+
+
+
+#READING IN FAMUSS DATA
+fm <- read.delim("http://www.biostat.umn.edu/~cavanr/FMS_data.txt",header = T, 
+                  sep = "\t")
+attach(fm)
+
+#SELECTING THE 4 GENES FROM THE DATASET
+
+selected_genes <- fm[, grepl("^ankr|^actn3|^lepr|^resistin", names(fm))] %>%
+  drop_na()
+head(selected_genes)
+attach(selected_genes)
+ncol(selected_genes)
+head(selected_genes)
+colnames(selected_genes)
+
+
+
+#CALCULATING TOTAL NUMBER OF SNPS
+
+#APPROACH 1- IDENTIFYING UNIQUE SNPS
+# Combine the selected columns into a single vector
+snp_vec <- unlist(selected_genes)
+snp_vec
+
+# Count the number of unique SNPs
+num_snps <- length(unique(snp_vec))
+num_snps
+
+# Print the result
+cat("Total number of SNPs in the selected genes:", num_snps)
+
+#APPROACH 2-FINDING TOTAL NUMBER OF SNPS WITH DUPLICATES
+num_snp <- sum(sapply(selected_genes, function(x) length(x)))
+cat("Total number of SNPs in the selected genes:", num_snp)
+
+
+
+# Convert the selected_genes dataset into a genotype matrix
+
+geno <- lapply(selected_genes, genotype, sep="")
+head(geno)
+tail(geno)
+
+geno <- lapply(selected_genes, genotype, sep="")
+head(geno)
+tail(geno)
+
+geno_list_converted = as.data.frame(geno)
+head(geno_list_converted)
+
+matrix <- LD(geno_list_converted)$`D'`
+head(matrix)
+tail(matrix)
+
+#matrix_1 <- LD(geno_list_converted)$`r'`
+#head(matrix)
+
+##GENERATING HEATMAP SHOWING LD OF SNPS FOR THE 4 GENES
+
+#genotypes <- makeGenotypes(selected_genes, sep = "", method = as.genotype)
+#head(genotype)
+
+
+#color =  palette(brewer.pal(n =8, name = "Reds"))
+
+#LDheatmap(matrix, LDmeasure = "D'", color = rev(color), SNP.name = names(genotypes), text = TRUE, 
+          #title = "LD heatmap for SNPs in the ANKRD6, ACTN3, LEPR and Resistin genes")
+
+chooseCRANmirror(ind=1)
+install.packages -> contrib.url
+library(contrib.url)
+
+
+
+
+
+
+```
+
+
+.
